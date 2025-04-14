@@ -148,7 +148,7 @@
   </header>
   <nav>
     <button class="nav-button active" onclick="mostrarSeccion('inicio', this)">INICIO</button>
-    <button class="nav-button" onclick="mostrarSeccion('camp', this)">INSCRIPCIÓN</button>
+    <button class="nav-button" onclick="mostrarSeccion('camp', this)">INSCRIPCIÓN SKILLS CAMP 2025</button>
     <button class="nav-button" onclick="mostrarSeccion('formatos', this)">FORMATOS</button>
     <button class="nav-button" onclick="mostrarSeccion('galeria', this)">CONTACTO</button>
   </nav>
@@ -194,7 +194,7 @@
 
     </section>
  <section id="camp">
-  <h2>Inscripción Skills Camp</h2>
+  <h2>Inscripción Skills Camp 2025</h2>
   <form id="formulario-inscripcion">
     <label>Nombre completo:
       <input type="text" name="nombre" required>
@@ -285,7 +285,8 @@
   });
 </script>
 
-    </section>
+       </section> <!-- Cierre correcto de sección de inscripción -->
+
     <section id="formatos">
       <h2>FORMATOS</h2>
       <p>Descarga los formatos necesarios para tu participación:</p>
@@ -295,21 +296,23 @@
         Descargar Formato PDF
       </a>
     </section>
+
     <section id="galeria">
       <h2>CONTACTO</h2>
-      <p>Redes Sociales:</p>
       <div class="social-icons">
-        <a href="https://www.facebook.com/profile.php?id=100088847336794&locale=es_LA" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://www.instagram.com/halcones.basketball" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.tiktok.com/@halcones.basketball" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
-        <a href="https://wa.me/525635782679" target="_blank" title="WhatsApp 1"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://wa.me/525532614194" target="_blank" title="WhatsApp 2"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://www.facebook.com/profile.php?id=100088847336794&locale=es_LA" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/halcones.basketball" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@halcones.basketball" target="_blank"><i class="fab fa-tiktok"></i></a>
+        <a href="https://wa.me/525635782679" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://wa.me/525532614194" target="_blank"><i class="fab fa-whatsapp"></i></a>
       </div>
     </section>
   </main>
+
   <footer>
     &copy; HALCONES 2025
   </footer>
+
   <script>
     function mostrarSeccion(id, boton) {
       document.querySelectorAll('main section').forEach(seccion => {
@@ -322,17 +325,59 @@
       boton.classList.add('active');
     }
 
-    document.getElementById('formulario-inscripcion').addEventListener('submit', function(event) {
+    document.getElementById('formulario-inscripcion').addEventListener('submit', async function (event) {
       event.preventDefault();
-      const mensaje = document.getElementById('mensaje');
-      mensaje.innerHTML = `
-        ¡Inscripción completada con éxito!<br>
-        <a href="https://drive.google.com/uc?export=download&id=1FwISN90C3sWgcNjxoZid94Rw-tEMo37S" 
-           style="display:inline-block; margin-top: 10px; background:#28a745; color:white; padding:10px 20px; border-radius:5px; text-decoration:none;"
-           target="_blank">
-          Descargar PDF de confirmación
-        </a>
-      `;
+
+      const form = event.target;
+      const nombre = form.nombre.value;
+      const curp = form.curp.value;
+      const grupo = form.grupo.value;
+      const talla = form.talla.value;
+      const archivoPago = form.archivo_pago.files[0];
+      const archivoCarta = form.archivo_responsiva.files[0];
+
+      const convertirBase64 = file =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+      const pdf_pago = await convertirBase64(archivoPago);
+      const pdf_responsiva = await convertirBase64(archivoCarta);
+
+      const data = new URLSearchParams();
+      data.append('nombre', nombre);
+      data.append('curp', curp);
+      data.append('grupo', grupo);
+      data.append('talla', talla);
+      data.append('pdf_pago', pdf_pago);
+      data.append('pdf_responsiva', pdf_responsiva);
+
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbwZwCUdFDORzyvK2TE-p5zAYqvQ9jbpLS2veT4V0qeKhY3ZB3XXVCciLgsrH8H0IU5t/exec', {
+          method: 'POST',
+          body: data
+        });
+
+        const result = await response.text();
+        if (result === 'OK') {
+          document.getElementById('mensaje').innerHTML = `
+            ¡Inscripción completada con éxito!<br>
+            <a href="https://drive.google.com/uc?export=download&id=1FwISN90C3sWgcNjxoZid94Rw-tEMo37S"
+              style="display:inline-block; margin-top: 10px; background:#28a745; color:white; padding:10px 20px; border-radius:5px; text-decoration:none;"
+              target="_blank">
+              Descargar PDF de confirmación
+            </a>
+          `;
+          form.reset();
+        } else {
+          document.getElementById('mensaje').textContent = 'Hubo un error: ' + result;
+        }
+      } catch (error) {
+        document.getElementById('mensaje').textContent = 'Error al enviar: ' + error.message;
+      }
     });
   </script>
 </body>
