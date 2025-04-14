@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscripción Skills Camp</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1a1a1a;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #000;
+      padding: 1px;
+      text-align: center;
+    }
+    header img {
+      width: 600px;
+      margin-top: 1px;
+    }
+    nav {
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+    }
+    .nav-button {
+      display: inline-block;
+      margin: 0 10px;
+      padding: 10px 20px;
+      background-color: #555;
+      color: white;
+      border: 2px solid white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      cursor: pointer;
+    }
+    .nav-button:hover {
+      background-color: #777;
+      transform: scale(1.05);
+    }
+    .nav-button.active {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+    main {
+      padding: 20px;
+    }
+    section {
+      display: none;
+      padding: 40px 20px;
+      background-color: #2a2a2a;
+      border-radius: 10px;
+      min-height: 300px;
+    }
+    section.active {
+      display: block;
+    }
+    form {
+      background-color: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+    }
+    label {
+      display: block;
+      margin-bottom: 15px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 5px;
+    }
+    button[type="submit"] {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+    #mensaje {
+      margin-top: 20px;
+      text-align: center;
+      color: lightgreen;
+    }
+    footer {
+      background-color: #444;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://scontent.fmex34-1.fna.fbcdn.net/v/t39.30808-6/491726146_122125520882739061_802729931895096651_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeE5NBR9vUwjIx4yN1y3XMDVv3C_hWXUps6_cL-FZdSmzu1JyrY49DVjCrjwZXQ02A7GfGJN1sy1mS0-5y2ulhJD&_nc_ohc=TvAhUYH-VGgQ7kNvwFplCIC&_nc_oc=AdmIZZRsoLWUDLT3paUNOEkmIWvkhwjk-CMNS3MGkYYZWO6JrJAzPoZ5jBxkNg29i-0&_nc_zt=23&_nc_ht=scontent.fmex34-1.fna&_nc_gid=zPTopFsaS5apN-wFuhaovg&oh=00_AfFrthJYMm8tlAtygU7l4he5ITVLP0k_-Mq6iEcPgt1KnQ&oe=680219E9" alt="Banner">
+  </header>
+  <nav>
+    <button class="nav-button active" onclick="mostrarSeccion('inicio', this)">Inicio</button>
+    <button class="nav-button" onclick="mostrarSeccion('camp', this)">Inscripción</button>
+    <button class="nav-button" onclick="mostrarSeccion('formatos', this)">Formatos</button>
+    <button class="nav-button" onclick="mostrarSeccion('galeria', this)">Galería</button>
+  </nav>
+  <main>
+    <section id="inicio" class="active">
+      <h2>Inicio</h2>
+      <p>Bienvenido a la página oficial de HALCONES.</p>
+    </section>
+    <section id="camp">
+      <h2>Inscripción Skills Camp</h2>
+      <form id="formulario">
+        <label>Nombre completo:
+          <input type="text" name="nombre" required>
+        </label>
+        <label>CURP:
+          <input type="text" name="curp" required>
+        </label>
+        <label>Edad:
+          <input type="text" name="grupo" required>
+        </label>
+        <label>Subir comprobante de pago (PDF):
+          <input type="file" id="archivo_pago" accept="application/pdf" required>
+        </label>
+        <label>Subir carta responsiva (PDF):
+          <input type="file" id="archivo_responsiva" accept="application/pdf" required>
+        </label>
+        <button type="submit">Enviar inscripción</button>
+        <div id="mensaje"></div>
+      </form>
+    </section>
+    <section id="formatos">
+      <h2>Formatos</h2>
+      <p>Descarga los formatos necesarios para tu participación.</p>
+    </section>
+    <section id="galeria">
+      <h2>Galería</h2>
+      <p>Fotos de nuestros eventos anteriores.</p>
+    </section>
+  </main>
+  <footer>
+    &copy; HALCONES 2025
+  </footer>
+  <script>
+    function mostrarSeccion(id, boton) {
+      document.querySelectorAll('main section').forEach(seccion => {
+        seccion.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      boton.classList.add('active');
+    }
+
+    const form = document.getElementById('formulario');
+    const mensaje = document.getElementById('mensaje');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzP4k9fhniv5snCe85KD7dhrtnsHVa06fVd0E5JmlvHTTG5_alU44Z5qu8ML1r5sbDq/exec';
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      mensaje.textContent = "Enviando...";
+      const nombre = form.nombre.value;
+      const curp = form.curp.value;
+      const grupo = form.grupo.value;
+      const archivoPago = document.getElementById('archivo_pago').files[0];
+      const archivoResp = document.getElementById('archivo_responsiva').files[0];
+      if (!archivoPago || !archivoResp) {
+        mensaje.textContent = "Por favor sube ambos archivos PDF.";
+        return;
+      }
+      const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+      });
+      const pdf_pago = await toBase64(archivoPago);
+      const pdf_responsiva = await toBase64(archivoResp);
+      const formData = new URLSearchParams();
+      formData.append("nombre", nombre);
+      formData.append("curp", curp);
+      formData.append("grupo", grupo);
+      formData.append("pdf_pago", pdf_pago);
+      formData.append("pdf_responsiva", pdf_responsiva);
+      fetch(scriptURL, {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.text())
+      .then(result => {
+        mensaje.textContent = "¡Inscripción enviada correctamente!";
+        const linkPDF = document.createElement('a');
+        linkPDF.href = "https://drive.google.com/uc?export=download&id=1n-gK6LaqBBW_Uc0XrmSl1924gMGFouNG";
+        linkPDF.textContent = "Descargar carta de bienvenida";
+        linkPDF.classList.add('nav-button');
+        linkPDF.setAttribute('target', '_blank');
+        mensaje.appendChild(document.createElement('br'));
+        mensaje.appendChild(linkPDF);
+        form.reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        mensaje.textContent = "Hubo un error al enviar la inscripción.";
+      });
+    });
+  </script>
+</body>
+</html>
